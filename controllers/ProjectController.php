@@ -2,14 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\ProjectForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+use app\Models\Project;
 
-class SiteController extends Controller
+class ProjectController extends Controller
 {
     /**
      * @inheritdoc
@@ -25,7 +25,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'about', 'contact', 'index'],
+                        'actions' => ['logout', 'index','view', 'new', 'edit'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -50,80 +50,75 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
         ];
     }
 
     /**
-     * Displays homepage.
+     * Displays projects.
      *
      * @return string
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $collection = Project::find()->all();
+
+        return $this->render('list', ['collection' => $collection]);
     }
 
     /**
-     * Login action.
+     * project edit page.
      *
      * @return string
      */
-    public function actionLogin()
+    public function actionNew()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+        $model = new ProjectForm();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('projectFormSaved');
 
             return $this->refresh();
         }
-        return $this->render('contact', [
+        return $this->render('edit', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Displays about page.
+     * project edit page
      *
      * @return string
      */
-    public function actionAbout()
+    public function actionEdit()
     {
-        return $this->render('about');
+        $model = new ProjectForm();
+        $model->setId(Yii::$app->request->getQueryParam('id'));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('projectFormSaved');
+
+            return $this->refresh();
+        }
+        return $this->render('edit', [
+            'model' => $model,
+        ]);
     }
+
+    /**
+     * project view
+     *
+     * @return string
+     */
+    public function actionView()
+    {
+        $id = Yii::$app->request->get('id');
+
+        if (null == $project = Project::findById($id)) {
+            $project = new Project();
+        }
+
+        return $this->render('view', [
+            'project' => $project,
+        ]);
+    }
+
 }
