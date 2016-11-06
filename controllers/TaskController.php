@@ -6,11 +6,10 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\Models\Project;
-use app\models\ProjectForm;
 use app\Models\Task;
+use app\models\TaskForm;
 
-class ProjectController extends Controller
+class TaskController extends Controller
 {
     /**
      * @inheritdoc
@@ -55,30 +54,35 @@ class ProjectController extends Controller
     }
 
     /**
-     * Displays projects.
+     * Displays tasks.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $collection = Project::find()->all();
+        $collection = Task::find()->all();
 
         return $this->render('list', ['collection' => $collection]);
     }
 
     /**
-     * project edit page.
+     * Task edit page.
      *
      * @return string
      */
     public function actionNew()
     {
 
-        $model = new ProjectForm();
+        $model = new TaskForm();
+
+        $model->setProjectId(Yii::$app->request->getQueryParam('project_id'));
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('projectFormSaved');
+            Yii::$app->session->setFlash('taskFormSaved');
 
             return $this->refresh();
+        } elseif ($model->hasErrors()) {
+            print_r($model->getErrors());
+            print_r($model);
         }
         return $this->render('edit', [
             'model' => $model,
@@ -86,16 +90,17 @@ class ProjectController extends Controller
     }
 
     /**
-     * project edit page
+     * task edit page
      *
      * @return string
      */
     public function actionEdit()
     {
-        $model = new ProjectForm();
+        $model = new TaskForm();
+        $model->setProjectId(Yii::$app->request->getQueryParam('project_id'));
         $model->setId(Yii::$app->request->getQueryParam('id'));
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('projectFormSaved');
+            Yii::$app->session->setFlash('taskFormSaved');
 
             return $this->refresh();
         }
@@ -105,7 +110,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * project view
+     * task view
      *
      * @return string
      */
@@ -113,19 +118,13 @@ class ProjectController extends Controller
     {
         $id = Yii::$app->request->get('id');
 
-        if (null == $project = Project::findById($id)) {
-            $project = new Project();
+        if (null == $task = Task::findById($id)) {
+            $task = new Task();
         }
 
         return $this->render('view', [
-            'project' => $project,
-            'taskCollection' => $this->getTasks($id),
+            'task' => $task,
         ]);
-    }
-
-    public function getTasks($project_id)
-    {
-        return Task::findAll(['project_id' => $project_id]);
     }
 
 }

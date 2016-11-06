@@ -22,19 +22,17 @@ $this->title = 'Projects';
 </div>
 <div class="project-list">
     <div class="body-content">
+        <div class="row">
             <?php foreach ($collection as $project): ?>
                 <?php if ($project): ?>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-9">
-                            <a href="<?php echo Url::toRoute(['project/view', 'id' => $project->id]); ?>">
-                                <?php echo $project->id; ?>. <?php echo $project->title; ?>
-                            </a>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 actions">
-                            <a class="col-xs-12" href="<?php echo Url::toRoute(['project/edit', 'id' => $project->id]); ?>">Edit</a>
-                        </div>
+                    <div class="col-sm-12">
+                        <a href="<?php echo Url::toRoute(['project/view', 'id' => $project->id]); ?>">
+                            <h2><?php echo $project->id; ?>. <?php echo $project->title; ?></h2>
+                            <div class="actions"><a href="<?php echo Url::toRoute(['project/edit', 'id' => $project->id]); ?>">Edit</a></div>
+                        </a>
                     </div>
                 <?php endif; ?>
             <?php endforeach; ?>
+        </div>
     </div>
 </div>

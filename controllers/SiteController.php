@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\helpers\Url;
 
 class SiteController extends Controller
 {
@@ -21,11 +22,11 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error', 'contact'],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'about', 'contact', 'index'],
+                        'actions' => ['logout', 'contact', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -64,7 +65,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->redirect(Url::toRoute(['project/index']));
     }
 
     /**
@@ -115,15 +116,5 @@ class SiteController extends Controller
         return $this->render('contact', [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 }

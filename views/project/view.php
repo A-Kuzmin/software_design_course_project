@@ -5,6 +5,7 @@
 /* @var $project app\models\Project */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Nav;
 
@@ -20,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'items' => [
                 ['label' => 'Back', 'url' => ['/project/index']],
                 ['label' => 'Edit', 'url' => ['/project/edit', ['id' => $project->id]]],
+                ['label' => 'Create Task', 'url' => ['/task/new', 'project_id' => $project->id]],
             ],
         ]);
         ?>
@@ -35,5 +37,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 Description: <?php echo $project->description; ?>
             </div>
         </div>
-
+    <div class="row">
+        <h3>Tasks</h3>
+        <?php foreach ($taskCollection as $task): ?>
+            <div class="col-sm-12">
+                <a href="<?php echo Url::toRoute(['task/view', 'id' => $task->id, 'project_id' => $project->id]); ?>"><?php echo $task->title; ?></a>
+            </div>
+        <?php endforeach; ?>
+    </div>
 </div>
