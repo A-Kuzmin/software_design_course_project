@@ -26,7 +26,6 @@ class ProjectController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index','view', 'new', 'edit'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
