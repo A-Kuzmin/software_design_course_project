@@ -1,60 +1,73 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $project app\models\Project */
-
 use yii\helpers\Html;
-use yii\helpers\Url;
+use yii\widgets\DetailView;
+use yii\grid\GridView;
 
-$this->title = $project->title;
+/* @var $this yii\web\View */
+/* @var $model app\models\Project */
+/* @var $taskDataProvider yii\data\ActiveDataProvider */
+/* @var $discussionDataProvider yii\data\ActiveDataProvider */
+/* @var $taskSearchModel app\models\TaskSearch */
 
+$this->title = $model->title;
+$this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
-    <div class="col-sm-12">
-        <a class="pull-right btn btn-default" href="<?php echo Url::toRoute(['project/index']); ?>">
-            Back
-        </a>
-
-        <a class="pull-right btn btn-warning"
-           href="<?php echo Url::toRoute(['/project/edit', ['id' => $project->id]]); ?>">
-            Edit
-        </a>
-
-        <a class="pull-right btn btn-primary"
-           href="<?php echo Url::toRoute(['/task/new', 'project_id' => $project->id]); ?>">
-            Create Task
-        </a>
-    </div>
-</div>
-
 <div class="project-view">
+
     <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="row">
-            <div class="col-lg-5">
-                Title: <?php echo $project->title; ?><br>
-                Description: <?php echo $project->description; ?>
-            </div>
-        </div>
-    <div class="row">
-        <h3>Tasks</h3>
+    <p>
+        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to delete this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>
+    <p>
 
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <tbody>
-                <?php foreach ($taskCollection as $task): ?>
-                    <tr>
-                        <td>
-                            <a href="<?php echo Url::toRoute(['task/view', 'id' => $task->id, 'project_id' => $project->id]); ?>">
-                                <?php echo $task->title; ?>
-                            </a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <?= Html::a('Tasks', ['/task/index', 'project_id' => $model->id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Discussions', ['/discussions/index', 'project_id' => $model->id], ['class' => 'btn btn-success']) ?>
+    </p>
+
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'title',
+            'description:ntext',
+            'status',
+            'created_at',
+            'updated_at',
+        ],
+    ]) ?>
+
+
+    <h2><?= Html::encode("Tasks") ?></h2>
+    <?= GridView::widget([
+        'dataProvider' => $taskDataProvider,
+        'columns' => [
+            'id',
+            'title',
+            'description:ntext',
+            'status',
+            ['class' => 'yii\grid\ActionColumn', 'controller' => 'task'],
+        ],
+    ]); ?>
+
+    <h2><?= Html::encode("Discussions") ?></h2>
+    <?= GridView::widget([
+        'dataProvider' => $discussionDataProvider,
+        'columns' => [
+            'id',
+            'title',
+            'status',
+            ['class' => 'yii\grid\ActionColumn', 'controller' => 'discussion'],
+        ],
+    ]); ?>
+
 </div>

@@ -36,6 +36,7 @@ class DiscussionController extends Controller
     public function actionIndex()
     {
         $searchModel = new DiscussionSearch();
+        $searchModel->project_id = Yii::$app->request->getQueryParam("project_id", null);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

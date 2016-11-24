@@ -2,14 +2,19 @@
 
 namespace app\controllers;
 
+use app\models\Discussion;
+use app\models\DiscussionSearch;
 use Yii;
-use yii\filters\AccessControl;
+use app\models\Project;
+use app\models\ProjectSearch;
+use app\models\TaskSearch;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\Models\Project;
-use app\models\ProjectForm;
-use app\Models\Task;
 
+/**
+ * ProjectController implements the CRUD actions for Project model.
+ */
 class ProjectController extends Controller
 {
     /**
@@ -18,113 +23,118 @@ class ProjectController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
-
     /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
-
-    /**
-     * Displays projects.
-     *
-     * @return string
+     * Lists all Project models.
+     * @return mixed
      */
     public function actionIndex()
     {
-        $collection = Project::find()->all();
+        $searchModel = new ProjectSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('list', ['collection' => $collection]);
-    }
-
-    /**
-     * project edit page.
-     *
-     * @return string
-     */
-    public function actionNew()
-    {
-
-        $model = new ProjectForm();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('projectFormSaved');
-
-            return $this->refresh();
-        }
-        return $this->render('edit', [
-            'model' => $model,
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * project edit page
-     *
-     * @return string
+     * Displays a single Project model.
+     * @param integer $id
+     * @return mixed
      */
-    public function actionEdit()
+    public function actionView($id)
     {
-        $model = new ProjectForm();
-        $model->setId(Yii::$app->request->getQueryParam('id'));
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('projectFormSaved');
 
-            return $this->refresh();
-        }
-        return $this->render('edit', [
-            'model' => $model,
-        ]);
-    }
+        $taskSearchModel = new TaskSearch();
+        $discussionSearchModel = new DiscussionSearch();
 
-    /**
-     * project view
-     *
-     * @return string
-     */
-    public function actionView()
-    {
-        $id = Yii::$app->request->get('id');
+        $taskSearchModel->project_id = $id;
+        $discussionSearchModel->project_id = $id;
 
-        if (null == $project = Project::findById($id)) {
-            $project = new Project();
-        }
+        $taskDataProvider = $taskSearchModel->search(Yii::$app->request->queryParams);
+        $discussionDataProvider = $discussionSearchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('view', [
-            'project' => $project,
-            'taskCollection' => $this->getTasks($id),
+            'model' => $this->findModel($id),
+            'taskSearchModel' => $taskSearchModel,
+            'taskDataProvider' => $taskDataProvider,
+            'discussionDataProvider' => $discussionDataProvider,
         ]);
     }
 
-    public function getTasks($project_id)
+    /**
+     * Creates a new Project model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
     {
-        return Task::findAll(['project_id' => $project_id]);
+        $model = new Project();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
+    /**
+     * Updates an existing Project model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Deletes an existing Project model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Project model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Project the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Project::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }

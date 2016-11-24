@@ -1,39 +1,39 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $task app\models\Task */
-
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use yii\bootstrap\Nav;
+use yii\widgets\DetailView;
 
-$this->title = $task->title;
+/* @var $this yii\web\View */
+/* @var $model app\models\Task */
 
+$this->title = $model->title;
+$this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
-    <div class="col-sm-12">
-        <?php
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-//                ['label' => 'Back', 'url' => ['/project/index']],
-                ['label' => 'Edit', 'url' => ['/task/edit', ['id' => $task->id]]],
-            ],
-        ]);
-        ?>
-    </div>
-</div>
+<div class="task-view">
 
-<div class="project-view">
     <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="row">
-            <div class="col-lg-5">
-                Title: <?php echo $task->title; ?><br>
-                Description: <?php echo $task->description; ?>
-            </div>
-        </div>
+    <p>
+        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to delete this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>
+
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'project_id',
+            'title',
+            'description:ntext',
+            'status',
+        ],
+    ]) ?>
 
 </div>
