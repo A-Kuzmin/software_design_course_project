@@ -5,6 +5,7 @@
 /* @var $model app\models\ContactForm */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Nav;
 
@@ -18,14 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <div class="col-sm-12">
-        <?php
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Back', 'url' => ['/project/index']],
-            ],
-        ]);
-        ?>
+        <a class="pull-right btn btn-default" href="<?php echo Url::toRoute(['project/index']); ?>">
+            Back
+        </a>
     </div>
 </div>
 <div class="project-edit">

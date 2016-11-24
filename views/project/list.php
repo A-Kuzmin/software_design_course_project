@@ -10,31 +10,33 @@ $this->title = 'Projects';
 ?>
 <div class="row">
     <div class="col-sm-12">
-        <?php
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Create Project', 'url' => ['/project/new']],
-            ],
-        ]);
-        ?>
+        <a class="pull-right btn btn-warning" href="<?php echo Url::toRoute(['project/new']); ?>">
+            Create Project
+        </a>
     </div>
 </div>
-<div class="project-list">
-    <div class="body-content">
-            <?php foreach ($collection as $project): ?>
-                <?php if ($project): ?>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-9">
+<div class="row project-list">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tbody>
+                <?php foreach ($collection as $project): ?>
+                    <tr>
+                        <td>
                             <a href="<?php echo Url::toRoute(['project/view', 'id' => $project->id]); ?>">
                                 <?php echo $project->id; ?>. <?php echo $project->title; ?>
                             </a>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 actions">
-                            <a class="col-xs-12" href="<?php echo Url::toRoute(['project/edit', 'id' => $project->id]); ?>">Edit</a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
+                        </td>
+                        <td class="text-right actions">
+                            <a class="col-xs-12"
+                               href="<?php echo Url::toRoute(['project/edit', 'id' => $project->id]); ?>">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

@@ -12,6 +12,13 @@ nbproject
 # windows thumbnail cache
 Thumbs.db
 
+Vagrantfile
+.vagrant
+puphpet
+html
+old
+
+
 # composer vendor dir
 /vendor
 

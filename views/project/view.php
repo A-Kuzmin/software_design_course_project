@@ -6,8 +6,6 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\bootstrap\ActiveForm;
-use yii\bootstrap\Nav;
 
 $this->title = $project->title;
 
@@ -15,16 +13,19 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <div class="col-sm-12">
-        <?php
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Back', 'url' => ['/project/index']],
-                ['label' => 'Edit', 'url' => ['/project/edit', ['id' => $project->id]]],
-                ['label' => 'Create Task', 'url' => ['/task/new', 'project_id' => $project->id]],
-            ],
-        ]);
-        ?>
+        <a class="pull-right btn btn-default" href="<?php echo Url::toRoute(['project/index']); ?>">
+            Back
+        </a>
+
+        <a class="pull-right btn btn-warning"
+           href="<?php echo Url::toRoute(['/project/edit', ['id' => $project->id]]); ?>">
+            Edit
+        </a>
+
+        <a class="pull-right btn btn-primary"
+           href="<?php echo Url::toRoute(['/task/new', 'project_id' => $project->id]); ?>">
+            Create Task
+        </a>
     </div>
 </div>
 
@@ -39,10 +40,21 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     <div class="row">
         <h3>Tasks</h3>
-        <?php foreach ($taskCollection as $task): ?>
-            <div class="col-sm-12">
-                <a href="<?php echo Url::toRoute(['task/view', 'id' => $task->id, 'project_id' => $project->id]); ?>"><?php echo $task->title; ?></a>
-            </div>
-        <?php endforeach; ?>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tbody>
+                <?php foreach ($taskCollection as $task): ?>
+                    <tr>
+                        <td>
+                            <a href="<?php echo Url::toRoute(['task/view', 'id' => $task->id, 'project_id' => $project->id]); ?>">
+                                <?php echo $task->title; ?>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
