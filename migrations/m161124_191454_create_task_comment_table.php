@@ -21,7 +21,7 @@ class m161124_191454_create_task_comment_table extends Migration
         ]);
 
         $this->addForeignKey('fk_task_comment_task_id', 'task_comment', 'task_id',
-            'discussion', 'id', 'CASCADE', 'CASCADE');
+            '{{%task}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_task_comment_user_id', 'task_comment', 'user_id',
             '{{%user}}', 'id', 'CASCADE', 'CASCADE');
     }

@@ -3,8 +3,11 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\models\Discussion;
 use app\models\DiscussionSearch;
+use app\models\discussion\Comment;
+use app\models\discussion\CommentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +23,19 @@ class DiscussionController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error', 'contact'],
+                        'allow' => true,
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -52,8 +68,14 @@ class DiscussionController extends Controller
      */
     public function actionView($id)
     {
+
+        $comentsSearchModel = new CommentSearch();
+        $comentsDataProvider = $comentsSearchModel->search(Yii::$app->request->queryParams);
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'comentsDataProvider' => $comentsDataProvider,
         ]);
     }
 
@@ -72,6 +94,22 @@ class DiscussionController extends Controller
             return $this->render('create', [
                 'model' => $model,
             ]);
+        }
+    }
+
+    /**
+     * Creates a new Comment model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreateComment()
+    {
+        $model = new Comment();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            $this->redirect(['view', 'id' => Yii::$app->request->getQueryParam("discussion_id")]);
         }
     }
 

@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
 
         <?= Html::a('Tasks', ['/task/index', 'project_id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Discussions', ['/discussions/index', 'project_id' => $model->id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Discussions', ['/discussion/index', 'project_id' => $model->id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([

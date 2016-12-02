@@ -2,21 +2,18 @@
 
 namespace app\controllers;
 
-use app\models\Discussion;
-use app\models\DiscussionSearch;
-use yii\filters\AccessControl;
 use Yii;
-use app\models\Project;
-use app\models\ProjectSearch;
-use app\models\TaskSearch;
+use yii\filters\AccessControl;
+use app\models\discussion\Comment;
+use app\models\discussion\CommentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProjectController implements the CRUD actions for Project model.
+ * DiscussionCommentController implements the CRUD actions for Comment model.
  */
-class ProjectController extends Controller
+class DiscussionCommentController extends Controller
 {
     /**
      * @inheritdoc
@@ -47,12 +44,12 @@ class ProjectController extends Controller
     }
 
     /**
-     * Lists all Project models.
+     * Lists all Comment models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProjectSearch();
+        $searchModel = new CommentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -62,38 +59,25 @@ class ProjectController extends Controller
     }
 
     /**
-     * Displays a single Project model.
+     * Displays a single Comment model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-
-        $taskSearchModel = new TaskSearch();
-        $discussionSearchModel = new DiscussionSearch();
-
-        $taskSearchModel->project_id = $id;
-        $discussionSearchModel->project_id = $id;
-
-        $taskDataProvider = $taskSearchModel->search(Yii::$app->request->queryParams);
-        $discussionDataProvider = $discussionSearchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'taskSearchModel' => $taskSearchModel,
-            'taskDataProvider' => $taskDataProvider,
-            'discussionDataProvider' => $discussionDataProvider,
         ]);
     }
 
     /**
-     * Creates a new Project model.
+     * Creates a new Comment model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Project();
+        $model = new Comment();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -105,7 +89,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Updates an existing Project model.
+     * Updates an existing Comment model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -124,7 +108,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Deletes an existing Project model.
+     * Deletes an existing Comment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -137,15 +121,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * Finds the Project model based on its primary key value.
+     * Finds the Comment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Project the loaded model
+     * @return Comment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Project::findOne($id)) !== null) {
+        if (($model = Comment::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

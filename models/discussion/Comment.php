@@ -3,6 +3,8 @@
 namespace app\models\discussion;
 
 use Yii;
+use app\models\Discussion;
+use app\models\User;
 
 /**
  * This is the model class for table "discussion_comment".
