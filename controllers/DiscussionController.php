@@ -98,22 +98,6 @@ class DiscussionController extends Controller
     }
 
     /**
-     * Creates a new Comment model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreateComment()
-    {
-        $model = new Comment();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $this->redirect(['view', 'id' => Yii::$app->request->getQueryParam("discussion_id")]);
-        }
-    }
-
-    /**
      * Updates an existing Discussion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -146,6 +130,36 @@ class DiscussionController extends Controller
     }
 
     /**
+     * Creates a new Comment model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionSend_comment()
+    {
+        $model = new Comment();
+        $model->discussion_id = Yii::$app->request->getQueryParam('discussion_id');
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->discussion_id]);
+        } else {
+            return $this->redirect(['view', 'id' => Yii::$app->request->getQueryParam("discussion_id")]);
+        }
+    }
+    /**
+     * Deletes an existing Comment model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete_comment($id)
+    {
+        $comment = $this->findCommentModel($id);
+        $discussion_id = $comment->discussion_id;
+        $comment->delete();
+
+        return $this->redirect(['view', 'id' => $discussion_id]);
+    }
+
+    /**
      * Finds the Discussion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -155,6 +169,23 @@ class DiscussionController extends Controller
     protected function findModel($id)
     {
         if (($model = Discussion::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
+    /**
+     * Finds the Comment model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Comment the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findCommentModel($id)
+    {
+        if (($model = Comment::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

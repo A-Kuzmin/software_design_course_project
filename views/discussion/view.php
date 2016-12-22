@@ -43,21 +43,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
     $comment = new \app\models\discussion\Comment();
-    $comment->discussion_id = $model->id;
-    $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($comment, 'discussion_id')->hiddenInput() ?>
+    $form = ActiveForm::begin([
+        'action' => ['discussion/send_comment', 'discussion_id' => $model->id],
+    ]); ?>
 
     <?= $form->field($comment, 'text')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Send', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
     <?php foreach ($comentsDataProvider->getModels() as $coment): ?>
-        <?php echo $coment->text; ?>
+        <?php echo $coment->text; ?> <br>
     <?php endforeach; ?>
 </div>
 

@@ -2,9 +2,12 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\task\Comment;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Task */
+/* @var $comentsDataProvider app\models\task\CommentSearch */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
@@ -36,4 +39,22 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+
+    <?php
+    $comment = new Comment();
+    $form = ActiveForm::begin([
+        'action' => ['task/send_comment', 'task_id' => $model->id],
+    ]); ?>
+
+    <?= $form->field($comment, 'text')->textarea(['rows' => 6]) ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Send', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+    <?php foreach ($comentsDataProvider->getModels() as $coment): ?>
+        <?php echo $coment->text; ?> <br>
+    <?php endforeach; ?>
 </div>

@@ -6,6 +6,8 @@ use Yii;
 use yii\filters\AccessControl;
 use app\models\Task;
 use app\models\TaskSearch;
+use app\models\task\Comment;
+use app\models\task\CommentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -67,8 +69,13 @@ class TaskController extends Controller
      */
     public function actionView($id)
     {
+        $comentsSearchModel = new CommentSearch();
+        $comentsDataProvider = $comentsSearchModel->search(Yii::$app->request->queryParams);
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'comentsDataProvider' => $comentsDataProvider,
         ]);
     }
 
@@ -132,6 +139,54 @@ class TaskController extends Controller
     protected function findModel($id)
     {
         if (($model = Task::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
+    /**
+     * Creates a new Comment model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionSend_comment()
+    {
+        $model = new Comment();
+        $model->task_id = Yii::$app->request->getQueryParam('task_id');
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->task_id]);
+        } else {
+            return $this->redirect(['view', 'id' => Yii::$app->request->getQueryParam("task_id")]);
+        }
+    }
+    /**
+     * Deletes an existing Comment model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete_comment($id)
+    {
+        $comment = $this->findCommentModel($id);
+        $task_id = $comment->task_id;
+        $comment->delete();
+
+        return $this->redirect(['view', 'id' => $task_id]);
+    }
+
+
+    /**
+     * Finds the Comment model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Comment the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findCommentModel($id)
+    {
+        if (($model = Comment::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
