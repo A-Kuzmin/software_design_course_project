@@ -71,4 +71,13 @@ class Comment extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+    
+    public function beforeSave($insert)
+    {
+        if (!$this->created_at) {
+            $time = new \DateTime();
+            $this->created_at = $time->format('Y-m-d H:i:s');
+        }
+        return parent::beforeSave($insert);
+    }
 }

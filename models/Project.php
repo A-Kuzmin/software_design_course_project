@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use DateTime;
 
 /**
  * This is the model class for table "project".
@@ -38,7 +39,6 @@ class Project extends \yii\db\ActiveRecord
             [['title'], 'required'],
             [['description'], 'string'],
             [['status'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
             [['title'], 'string', 'max' => 64],
         ];
     }
@@ -94,4 +94,15 @@ class Project extends \yii\db\ActiveRecord
     {
         return static::findOne(['id' => $id]);
     }
+
+    public function beforeSave($insert)
+    {
+        $time = new DateTime();
+        if (!$this->created_at) {
+            $this->created_at = $time->format('Y-m-d H:i:s');
+        }
+        $this->updated_at = $time->format('Y-m-d H:i:s');
+        return parent::beforeSave($insert);
+    }
+
 }

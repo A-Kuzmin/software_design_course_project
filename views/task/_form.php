@@ -6,13 +6,17 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Task */
 /* @var $form yii\widgets\ActiveForm */
+$projects = \app\helper\Project::getOptions();
+$params = [
+    'prompt' => 'Select Project'
+];
 ?>
 
 <div class="task-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'project_id')->textInput() ?>
+    <?= $form->field($model, 'project_id')->dropDownList($projects, $params) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 

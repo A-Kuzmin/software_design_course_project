@@ -46,7 +46,7 @@ class Discussion extends \yii\db\ActiveRecord
             'id' => 'ID',
             'project_id' => 'Project ID',
             'title' => 'Title',
-            'status' => 'Status',
+            'status' => 'Enabled',
         ];
     }
 
