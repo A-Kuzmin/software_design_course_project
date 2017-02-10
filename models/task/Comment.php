@@ -78,6 +78,10 @@ class Comment extends \yii\db\ActiveRecord
             $time = new \DateTime();
             $this->created_at = $time->format('Y-m-d H:i:s');
         }
+
+        if (!$this->user_id) {
+            $this->user_id = Yii::$app->user->identity->getId();
+        }
         return parent::beforeSave($insert);
     }
 }

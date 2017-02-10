@@ -54,7 +54,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php ActiveForm::end(); ?>
 
-    <?php foreach ($comentsDataProvider->getModels() as $coment): ?>
-        <?php echo $coment->text; ?> <br>
-    <?php endforeach; ?>
+    <div class="row">
+        <?php /** @var Comment $taskComment */ ?>
+        <?php foreach ($comentsDataProvider->getModels() as $taskComment): ?>
+            <div class="col-sm-12">
+                <div class="col-sm-12">
+                    <strong> <?php echo ($taskComment->user_id)? $taskComment->getUser() : 'not find user'; ?> </strong>
+                    <?php echo $taskComment->created_at; ?>
+                </div>
+                <?php echo $taskComment->text; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
 </div>

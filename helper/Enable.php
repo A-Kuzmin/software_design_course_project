@@ -1,13 +1,13 @@
 <?php 
 namespace app\helper;
 
-class YesNo
+class Enable
 {
     public static function getOptions()
     {
         return [
-            0 => 'No',
-            1 => 'Yes',
+            0 => 'Disable',
+            1 => 'Enable',
         ];
     }
 
