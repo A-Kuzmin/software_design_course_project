@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
+use app\filters\AccessControl;
 use app\models\Discussion;
 use app\models\DiscussionSearch;
 use app\models\discussion\Comment;
@@ -29,10 +29,6 @@ class DiscussionController extends Controller
                     [
                         'actions' => ['login', 'error', 'contact'],
                         'allow' => true,
-                    ],
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
                     ],
                 ],
             ],

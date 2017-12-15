@@ -8,7 +8,7 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
+use app\filters\AccessControl;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -23,23 +23,6 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'matchCallback' => function ($rule, $action) {
-
-                            if (\Yii::$app->user->isGuest) {
-                                return false;
-                            }
-                            /** @var \app\models\User $user */
-                            $user = \Yii::$app->user->identity;
-                            if ($user->is_admin) {
-                                return true;
-                            }
-                            return false;
-                        }
-                    ],
-                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),

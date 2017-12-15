@@ -1,0 +1,31 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:1.9.6
+    volumes:
+      - ./:/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8091:80"
+    depends_on:
+      - php
+  php:
+    build: ./docker/php/build
+    volumes:
+      - ./:/www:rw
+      - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/auth.json:/root/.composer/auth.json
+    working_dir: /www/
+    environment:
+      - ICU_DATA=/opt/icu/
+  db:
+     image: mysql:5.7
+     volumes:
+       - ./docker/mysql/db:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: web
+       MYSQL_USER: web
+       MYSQL_PASSWORD: web

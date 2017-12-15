@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\Discussion;
 use app\models\DiscussionSearch;
-use yii\filters\AccessControl;
+use app\filters\AccessControl;
 use Yii;
 use app\models\Project;
 use app\models\ProjectSearch;
@@ -30,10 +30,6 @@ class ProjectController extends Controller
                     [
                         'actions' => ['login', 'error', 'contact'],
                         'allow' => true,
-                    ],
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
                     ],
                 ],
             ],

@@ -33,8 +33,8 @@ class UserController extends Controller
             $user->save();
         } else {
             foreach ($user->getErrors() as $error) {
-                echo "Error " . $error;
-                echo "/n";
+                echo "Error " . implode("\n", $error);
+                echo "\n";
             }
         }
     }

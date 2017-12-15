@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
+use app\filters\AccessControl;
 use app\models\Task;
 use app\models\TaskSearch;
 use app\models\task\Comment;
@@ -29,10 +29,6 @@ class TaskController extends Controller
                     [
                         'actions' => ['login', 'error', 'contact'],
                         'allow' => true,
-                    ],
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
                     ],
                 ],
             ],
